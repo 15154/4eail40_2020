@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"io"
 	"os"
 	"strings"
@@ -8,6 +9,18 @@ import (
 
 type spaceEraser struct {
 	r io.Reader
+}
+
+func (s spaceEraser) Read(a []byte) (int, error) {
+	e, err := s.r.Read(a)
+	//Remove all spaces by replacing them by nothing
+	b := bytes.ReplaceAll(a, []byte(" "), []byte(""))
+	//Some withe spaces can still be remaining
+	b = bytes.Trim(b, "\x00")
+	//Need to update the length of the byte
+	e, err = s.r.Read(b)
+	e = copy(a, b)
+	return e, err
 }
 
 func main() {

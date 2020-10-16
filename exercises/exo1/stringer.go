@@ -1,19 +1,48 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
-// Implement types Rectangle, Circle and Shape
+type Shape interface {
+	Area() float64
+	fmt.Stringer
+}
+
+type Circle struct {
+	r float64
+}
+
+type Rectangle struct {
+	Length float64
+	Width  float64
+}
+
+func (c Circle) Area() float64 {
+	return math.Pi * math.Pow(c.r, 2)
+}
+
+func (r Rectangle) Area() float64 {
+	return r.Length * r.Width
+}
+
+func (r Rectangle) String() string {
+	return fmt.Sprintf("Rectangle : length = %f, width = %f", r.Width, r.Length)
+}
+
+func (c Circle) String() string {
+	return fmt.Sprintf("Circle of radius %f", c.r)
+}
 
 func main() {
-	r := &Rectangle{2, 3}
-	c := &Circle{5}
+	r := &Rectangle{2, 4}
+	c := &Circle{4}
 
 	shapes := []Shape{r, c}
 
 	for _, s := range shapes {
 		fmt.Println(s)
-		// Expected output:
-		// Square of width 2 and length 3
-		// Circle of radius 5
+		fmt.Println("area =", s.Area())
 	}
 }
