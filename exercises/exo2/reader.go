@@ -8,17 +8,14 @@ import (
 )
 
 type spaceEraser struct {
-	r io.Reader
+	read io.Reader
 }
 
 func (s spaceEraser) Read(a []byte) (int, error) {
-	e, err := s.r.Read(a)
-	//Remove all spaces by replacing them by nothing
+	e, err := s.read.Read(a)
 	b := bytes.ReplaceAll(a, []byte(" "), []byte(""))
-	//Some withe spaces can still be remaining
 	b = bytes.Trim(b, "\x00")
-	//Need to update the length of the byte
-	e, err = s.r.Read(b)
+	e, err = s.read.Read(b)
 	e = copy(a, b)
 	return e, err
 }
